@@ -1,11 +1,10 @@
 import { Graphics, Text } from 'pixi.js';
-import type { Obstacle } from '../game/Obstacle';
 
 export class ObstacleRenderer {
-  readonly container = new Graphics();
-  private readonly labels: Text[] = [];
+  container = new Graphics();
+  labels = [];
 
-  draw(obstacles: Obstacle[], showBounds: boolean): void {
+  draw(obstacles, showBounds) {
     this.container.clear();
     for (const label of this.labels) label.destroy();
     this.labels.length = 0;

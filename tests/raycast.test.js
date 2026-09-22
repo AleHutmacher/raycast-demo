@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { raycast } from '../src/raycast/Raycast';
-import type { Obstacle } from '../src/game/Obstacle';
+import { raycast } from '../src/raycast/Raycast.js';
 
-const box: Obstacle = { id: 7, position: { x: 10, y: 10 }, width: 20, height: 20 };
+const box = { id: 7, position: { x: 10, y: 10 }, width: 20, height: 20 };
 
 describe('raycast', () => {
   it('returns the closest hit, point and surface normal', () => {

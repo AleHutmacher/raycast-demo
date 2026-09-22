@@ -1,11 +1,9 @@
 import { Graphics } from 'pixi.js';
-import type { Vector2 } from '../math/Vector2';
-import type { RaycastHit } from '../raycast/RaycastHit';
 
 export class RayRenderer {
-  readonly graphics = new Graphics();
+  graphics = new Graphics();
 
-  draw(origin: Vector2, rays: Array<{ direction: Vector2; distance: number; hit: RaycastHit | null }>, maxDistance: number, options: { showHit: boolean; showNormal: boolean }, shot: RaycastHit | null, anchor: RaycastHit | null, connection: { from: Vector2; to: Vector2 } | null): void {
+  draw(origin, rays, maxDistance, options, shot, anchor, connection) {
     this.graphics.clear();
     for (const ray of rays) {
       const endDistance = ray.hit?.distance ?? maxDistance;

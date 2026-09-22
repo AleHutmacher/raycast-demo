@@ -1,17 +1,11 @@
-import type { Vector2 } from '../math/Vector2';
-import type { Obstacle } from '../game/Obstacle';
-import type { RaycastHit } from './RaycastHit';
-
-interface Entry { distance: number; normal: Vector2; }
-
-function intersectRectangle(origin: Vector2, direction: Vector2, maxDistance: number, obstacle: Obstacle): Entry | null {
+function intersectRectangle(origin, direction, maxDistance, obstacle) {
   const minX = obstacle.position.x;
   const minY = obstacle.position.y;
   const maxX = minX + obstacle.width;
   const maxY = minY + obstacle.height;
   let near = -Infinity;
   let far = Infinity;
-  let nearNormal: Vector2 = { x: 0, y: 0 };
+  let nearNormal = { x: 0, y: 0 };
 
   const axes = [
     { origin: origin.x, direction: direction.x, min: minX, max: maxX, minNormal: { x: -1, y: 0 }, maxNormal: { x: 1, y: 0 } },
@@ -36,8 +30,8 @@ function intersectRectangle(origin: Vector2, direction: Vector2, maxDistance: nu
   return { distance, normal: near >= 0 ? nearNormal : { x: -direction.x, y: direction.y === 0 ? 0 : -direction.y } };
 }
 
-export function raycast(origin: Vector2, direction: Vector2, maxDistance: number, obstacles: Obstacle[]): RaycastHit | null {
-  let closest: RaycastHit | null = null;
+export function raycast(origin, direction, maxDistance, obstacles) {
+  let closest = null;
   for (const obstacle of obstacles) {
     const entry = intersectRectangle(origin, direction, maxDistance, obstacle);
     if (entry && (!closest || entry.distance < closest.distance)) {

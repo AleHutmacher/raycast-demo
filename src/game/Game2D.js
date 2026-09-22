@@ -1,36 +1,35 @@
 import { Application, Container, Graphics, Text } from 'pixi.js';
-import { add, normalize, rotate, scale, subtract, type Vector2 } from '../math/Vector2';
-import { raycast } from '../raycast/Raycast';
-import { ObstacleRenderer } from '../rendering/ObstacleRenderer';
-import { PlayerRenderer } from '../rendering/PlayerRenderer';
-import { RayRenderer } from '../rendering/RayRenderer';
-import { Player } from './Player';
-import { World } from './World';
-import type { Controls, DebugState } from '../ui/DebugPanel';
-import type { RaycastHit } from '../raycast/RaycastHit';
+import { add, normalize, rotate, scale, subtract } from '../math/Vector2.js';
+import { raycast } from '../raycast/Raycast.js';
+import { ObstacleRenderer } from '../rendering/ObstacleRenderer2D.js';
+import { PlayerRenderer } from '../rendering/PlayerRenderer2D.js';
+import { RayRenderer } from '../rendering/RayRenderer2D.js';
+import { Player } from './Player2D.js';
+import { World } from './World2D.js';
 
 export class Game {
-  private readonly world = new World();
-  private readonly player = new Player();
-  private readonly root = new Container();
-  private readonly rays = new RayRenderer();
-  private readonly obstacles = new ObstacleRenderer();
-  private readonly playerRenderer = new PlayerRenderer();
-  private readonly keys = new Set<string>();
-  private pointer: Vector2 = { x: 600, y: 300 };
-  private shotHit: RaycastHit | null = null;
-  private anchor: RaycastHit | null = null;
-  private connection: { from: Vector2; to: Vector2 } | null = null;
-  private currentControls: Controls | null = null;
-  private activeWeapon: 1 | 2 = 1;
-  private ropeLength = 0;
-  private jumpWasDown = false;
-  private jumpReady = true;
-  private mouseFireDown = false;
-  private width = 900;
-  private height = 700;
+  world = new World();
+  player = new Player();
+  root = new Container();
+  rays = new RayRenderer();
+  obstacles = new ObstacleRenderer();
+  playerRenderer = new PlayerRenderer();
+  keys = new Set();
+  pointer = { x: 600, y: 300 };
+  shotHit = null;
+  anchor = null;
+  connection = null;
+  currentControls = null;
+  activeWeapon = 1;
+  ropeLength = 0;
+  jumpWasDown = false;
+  jumpReady = true;
+  mouseFireDown = false;
+  width = 900;
+  height = 700;
 
-  constructor(private readonly app: Application) {
+  constructor(app) {
+    this.app = app;
     app.stage.addChild(this.root);
     const background = new Graphics().rect(0, 0, 2000, 1400).fill(0x0d1726);
     this.root.addChild(background);
@@ -44,7 +43,7 @@ export class Game {
       const key = event.key.toLowerCase();
       this.keys.add(key);
       if (key === '1' || key === '2') {
-        this.activeWeapon = Number(key) as 1 | 2;
+        this.activeWeapon = Number(key);
         if (this.activeWeapon === 1) { this.anchor = null; this.connection = null; }
       }
     });
@@ -59,9 +58,9 @@ export class Game {
     this.resize();
   }
 
-  update(deltaSeconds: number, controls: Controls, onDebug: (state: DebugState) => void): void {
+  update(deltaSeconds, controls, onDebug) {
     this.currentControls = controls;
-    let movement: Vector2 = { x: 0, y: 0 };
+    let movement = { x: 0, y: 0 };
     if (this.keys.has('w') || this.keys.has('arrowup')) movement.y -= 1;
     if (this.keys.has('s') || this.keys.has('arrowdown')) movement.y += 1;
     if (this.keys.has('a') || this.keys.has('arrowleft')) movement.x -= 1;
@@ -85,8 +84,6 @@ export class Game {
       const ropeDistance = Math.hypot(ropeOffset.x, ropeOffset.y);
       if (ropeDistance > 0) {
         const tangentialInput = movement.x;
-        // A/D siempre conserva el sentido horizontal de la pantalla; la cuerda
-        // elimina luego la componente que intentaría alejar al jugador del ancla.
         this.player.velocity = add(this.player.velocity, scale({ x: tangentialInput, y: 0 }, 1100 * physicsResponse * deltaSeconds));
         const damping = Math.pow(0.9985, deltaSeconds * 60);
         this.player.velocity = scale(this.player.velocity, damping);
@@ -113,7 +110,7 @@ export class Game {
     onDebug({ playerX: this.player.position.x, playerY: this.player.position.y, directionX: this.player.direction.x, directionY: this.player.direction.y, hit: primary ? { id: primary.obstacle.id, distance: primary.distance, x: primary.point.x, y: primary.point.y } : null });
   }
 
-  fire(): void {
+  fire() {
     const controls = this.currentControls;
     const angle = (controls?.angle ?? 0) * Math.PI / 180;
     const distance = controls?.distance ?? 500;
@@ -136,7 +133,7 @@ export class Game {
     this.player.velocity = add(this.player.velocity, scale({ x: -rope.y, y: rope.x }, 150));
   }
 
-  private applyRopeConstraint(): void {
+  applyRopeConstraint() {
     if (!this.anchor) return;
     const offset = subtract(this.player.position, this.anchor.point);
     const distance = Math.hypot(offset.x, offset.y);
@@ -147,15 +144,15 @@ export class Game {
     if (radialSpeed > 0) this.player.velocity = subtract(this.player.velocity, scale(normal, radialSpeed));
   }
 
-  private resolveWorldCollisions(): void {
+  resolveWorldCollisions() {
     for (const obstacle of this.world.obstacles) {
       const minX = obstacle.position.x;
       const minY = obstacle.position.y;
       const maxX = minX + obstacle.width;
       const maxY = minY + obstacle.height;
       const closest = { x: Math.max(minX, Math.min(this.player.position.x, maxX)), y: Math.max(minY, Math.min(this.player.position.y, maxY)) };
-      let normal: Vector2;
-      let penetration: number;
+      let normal;
+      let penetration;
       const dx = this.player.position.x - closest.x;
       const dy = this.player.position.y - closest.y;
       const distance = Math.hypot(dx, dy);
@@ -179,12 +176,21 @@ export class Game {
     if (this.player.position.y > this.height - this.player.radius) { this.player.position.y = this.height - this.player.radius; this.player.velocity.y = 0; this.jumpReady = true; }
   }
 
-  private createGrid(): Graphics {
+  createGrid() {
     const grid = new Graphics();
     for (let x = 0; x <= 1400; x += 40) grid.moveTo(x, 0).lineTo(x, 1000);
     for (let y = 0; y <= 1000; y += 40) grid.moveTo(0, y).lineTo(1400, y);
     grid.stroke({ color: 0x17263b, width: 1, alpha: 0.8 });
     return grid;
   }
-  private resize(): void { const canvas = this.app.canvas; const rect = canvas.parentElement?.getBoundingClientRect(); if (!rect) return; this.width = rect.width; this.height = rect.height; this.app.renderer.resize(this.width, this.height); this.app.stage.hitArea = this.app.screen; }
+
+  resize() {
+    const canvas = this.app.canvas;
+    const rect = canvas.parentElement?.getBoundingClientRect();
+    if (!rect) return;
+    this.width = rect.width;
+    this.height = rect.height;
+    this.app.renderer.resize(this.width, this.height);
+    this.app.stage.hitArea = this.app.screen;
+  }
 }

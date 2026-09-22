@@ -2,7 +2,9 @@
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; min-height: 100vh; overflow: hidden; }
 #app { display: flex; width: 100vw; height: 100vh; }
-.stage { position: relative; flex: 1 1 auto; min-width: 0; min-height: 420px; overflow: hidden; }
+.stage { position: relative; flex: 1 1 auto; min-width: 0; min-height: 420px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.stage-wide { min-height: unset; height: 55vh; max-height: 520px; }
+.stage-wide canvas { max-height: 520px; }
 .stage canvas { display: block; width: 100%; height: 100%; }
 .panel { width: 320px; flex: 0 0 320px; overflow: visible; background: #111e30; border-left: 1px solid #223754; padding: 22px 24px 14px; color: #dceafe; }
 .eyebrow { color: #55dfbc; font-size: 10px; font-weight: 800; letter-spacing: 2px; }
@@ -29,4 +31,21 @@ input[type=range] { display: block; accent-color: #55dfbc; width: 100%; margin-t
 .section-title { display: flex; align-items: center; justify-content: space-between; } .section-title h2 { margin-bottom: 0; } .compact { margin: 0; } .is-hidden { display: none; }
 .readout { padding: 10px 15px; border-radius: 6px; background: #0c1726; font-family: ui-monospace, monospace; font-size: 12px; } .readout p { display: flex; justify-content: space-between; margin: 5px 0; color: #7892b0; } .readout strong { color: #d7e8fb; font-weight: 500; } .readout-heading { margin: 9px 0 6px; color: #4fdbbb; font-size: 10px; letter-spacing: 1.4px; font-weight: bold; } .readout-heading:first-child { margin-top: 0; }
 footer { color: #667e9b; font-size: 10px; line-height: 1.8; } .dot { display: inline-block; width: 6px; height: 6px; background: #55dfbc; border-radius: 50%; margin-right: 5px; } .mouse { float: right; }
-@media (max-width: 720px) { body { overflow: auto; } #app { flex-direction: column; height: auto; min-height: 100vh; } .stage { min-height: 60vh; height: 60vh; } .panel { width: 100%; flex-basis: auto; border-left: 0; border-top: 1px solid #223754; } }
+.stage-fullscreen { position: absolute; inset: 0; min-height: unset; }
+#menu { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; }
+.menu-inner { text-align: center; max-width: 700px; padding: 20px; }
+.menu-brand .eyebrow { color: #55dfbc; font-size: 10px; font-weight: 800; letter-spacing: 2px; }
+.menu-brand h1 { margin: 8px 0 7px; font-size: 36px; letter-spacing: -1.5px; }
+.menu-brand p { color: #8097b3; font-size: 13px; line-height: 1.5; margin: 0 0 32px; }
+.menu-cards { display: flex; gap: 20px; justify-content: center; }
+.menu-card { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 260px; padding: 32px 24px; border: 1px solid #29415f; border-radius: 10px; background: #111e30; color: #dceafe; cursor: pointer; transition: .25s; position: relative; overflow: hidden; }
+.menu-card:hover { border-color: #55dfbc; background: #162a40; transform: translateY(-4px); box-shadow: 0 12px 32px #050b1488; }
+.menu-card-icon { display: block; width: 56px; height: 56px; border-radius: 50%; border: 2px solid #355270; background: #1a2d44; position: relative; overflow: hidden; }
+.menu-card:hover .menu-card-icon { border-color: #55dfbc; background: #1a3a45; }
+.card-2d:before { content: ''; display: block; margin: 14px auto 0; width: 24px; height: 24px; border: 2px solid #55dfbc; border-radius: 50%; position: relative; }
+.card-2d:after { content: ''; position: absolute; top: 22px; left: 50%; margin-left: -1px; width: 2px; height: 20px; background: #ffc857; }
+.card-3d:before { content: ''; display: block; margin: 12px auto 0; width: 28px; height: 20px; border: 2px solid #55dfbc; border-radius: 3px; }
+.card-3d:after { content: ''; display: block; margin: 3px auto 0; width: 18px; height: 12px; border: 1px solid #8ef6ff; border-radius: 2px; }
+.menu-card-title { font-size: 18px; font-weight: 700; }
+.menu-card-desc { font-size: 12px; color: #8097b3; line-height: 1.5; }
+@media (max-width: 720px) { body { overflow: auto; } #app { flex-direction: column; height: auto; min-height: 100vh; } .stage { min-height: 60vh; height: 60vh; } .panel { width: 100%; flex-basis: auto; border-left: 0; border-top: 1px solid #223754; } .menu-cards { flex-direction: column; align-items: center; } .menu-card { width: 100%; max-width: 280px; } }
