@@ -1,4 +1,39 @@
+<!DOCTYPE html>
 <html lang="es">
-  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Raycast Lab</title></head>
-  <body><div id="app"></div><script type="module" src="/src/main.js"></script></body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raycast Lab</title>
+    <link rel="stylesheet" href="src/style.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <!--
+      Scripts clásicos (sin type="module") y con rutas relativas para que el juego
+      funcione abriendo este archivo con doble clic (file://), sin servidor ni npm.
+      El orden importa: cada archivo registra lo suyo en window.RaycastLab.
+    -->
+    <script src="src/math/Vector2.js"></script>
+    <script src="src/raycast/Raycast.js"></script>
+    <script src="src/raycast/DDA.js"></script>
+    <script src="src/game/Obstacle2D.js"></script>
+    <script src="src/game/Player2D.js"></script>
+    <script src="src/game/World2D.js"></script>
+    <script src="src/game/Player3D.js"></script>
+    <script src="src/game/World3D.js"></script>
+    <script src="src/rendering/Draw.js"></script>
+    <script src="src/rendering/CanvasApp.js"></script>
+    <script src="src/rendering/ObstacleRenderer2D.js"></script>
+    <script src="src/rendering/PlayerRenderer2D.js"></script>
+    <script src="src/rendering/RayRenderer2D.js"></script>
+    <script src="src/rendering/MinimapRenderer3D.js"></script>
+    <script src="src/rendering/RaycasterRenderer3D.js"></script>
+    <script src="src/game/Game2D.js"></script>
+    <script src="src/game/Game3D.js"></script>
+    <script src="src/ui/Menu.js"></script>
+    <script src="src/ui/DebugPanel2D.js"></script>
+    <script src="src/ui/DebugPanel3D.js"></script>
+    <script src="src/main.js"></script>
+  </body>
 </html>

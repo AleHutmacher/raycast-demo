@@ -1,13 +1,18 @@
-import { Graphics } from 'pixi.js';
+(function (Lab) {
+  'use strict';
 
-export class PlayerRenderer {
-  graphics = new Graphics();
+  const { Draw } = Lab;
 
-  draw(player, weapon) {
-    this.graphics.clear();
-    this.graphics.circle(player.position.x, player.position.y, 16).fill(0x4de1bd).stroke({ color: 0xd9fff6, width: 2 });
-    this.graphics.moveTo(player.position.x + player.direction.x * 11, player.position.y + player.direction.y * 11).lineTo(player.position.x + player.direction.x * 30, player.position.y + player.direction.y * 30).stroke({ color: weapon === 1 ? 0xffd166 : 0x9b7cff, width: 7, cap: 'round' });
-    this.graphics.moveTo(player.position.x, player.position.y).lineTo(player.position.x + player.direction.x * 31, player.position.y + player.direction.y * 31).stroke({ color: 0xffffff, width: 4, cap: 'round' });
-    this.graphics.circle(player.position.x, player.position.y, 4).fill(0x122033);
+  class PlayerRenderer {
+    draw(ctx, player, weapon) {
+      const { x, y } = player.position;
+      const dir = player.direction;
+      Draw.circle(ctx, x, y, 16, 0x4de1bd, { color: 0xd9fff6, width: 2 });
+      Draw.line(ctx, x + dir.x * 11, y + dir.y * 11, x + dir.x * 30, y + dir.y * 30, { color: weapon === 1 ? 0xffd166 : 0x9b7cff, width: 7, cap: 'round' });
+      Draw.line(ctx, x, y, x + dir.x * 31, y + dir.y * 31, { color: 0xffffff, width: 4, cap: 'round' });
+      Draw.circle(ctx, x, y, 4, 0x122033);
+    }
   }
-}
+
+  Lab.PlayerRenderer = PlayerRenderer;
+})(window.RaycastLab = window.RaycastLab || {});

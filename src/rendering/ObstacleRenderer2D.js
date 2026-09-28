@@ -1,21 +1,23 @@
-import { Graphics, Text } from 'pixi.js';
+(function (Lab) {
+  'use strict';
 
-export class ObstacleRenderer {
-  container = new Graphics();
-  labels = [];
+  const { Draw } = Lab;
 
-  draw(obstacles, showBounds) {
-    this.container.clear();
-    for (const label of this.labels) label.destroy();
-    this.labels.length = 0;
-    for (const obstacle of obstacles) {
-      const { x, y } = obstacle.position;
-      this.container.roundRect(x, y, obstacle.width, obstacle.height, 8).fill({ color: 0x273b59 }).stroke({ color: 0x4d709d, width: 2 });
-      if (showBounds) this.container.rect(x, y, obstacle.width, obstacle.height).stroke({ color: 0x73a8d8, width: 1, alpha: 0.65 });
-      const label = new Text({ text: `#${obstacle.id}`, style: { fill: 0x9bb9d7, fontFamily: 'Arial', fontSize: 12, fontWeight: 'bold' } });
-      label.position.set(x + 9, y + 8);
-      this.container.addChild(label);
-      this.labels.push(label);
+  const LABEL_STYLE = { fill: 0x9bb9d7, fontFamily: 'Arial', fontSize: 12, fontWeight: 'bold' };
+
+  class ObstacleRenderer {
+    draw(ctx, obstacles, showBounds) {
+      for (const obstacle of obstacles) {
+        const { x, y } = obstacle.position;
+        Draw.roundRect(ctx, x, y, obstacle.width, obstacle.height, 8, 0x273b59, { color: 0x4d709d, width: 2 });
+        if (showBounds) Draw.rect(ctx, x, y, obstacle.width, obstacle.height, null, { color: 0x73a8d8, width: 1, alpha: 0.65 });
+      }
+      // Las etiquetas van encima de todas las formas (como los hijos Text en pixi).
+      for (const obstacle of obstacles) {
+        Draw.text(ctx, `#${obstacle.id}`, obstacle.position.x + 9, obstacle.position.y + 8, LABEL_STYLE);
+      }
     }
   }
-}
+
+  Lab.ObstacleRenderer = ObstacleRenderer;
+})(window.RaycastLab = window.RaycastLab || {});
