@@ -1,7 +1,4 @@
-(function (Lab) {
-  'use strict';
-
-  class DebugPanel {
+export class DebugPanel {
     element = document.createElement('aside');
     controls = { enabled: true, distance: 500, angle: 0, rays: 21, fov: 90, gravity: 980, physics: 100, showHit: true, showNormal: false, showBounds: false, showDebug: true, multiple: false };
     values = new Map();
@@ -26,20 +23,24 @@
         '<div class="readout"><div class="readout-heading">PLAYER</div><p>X <strong data-read="playerX">0.0</strong></p><p>Y <strong data-read="playerY">0.0</strong></p><div class="readout-heading">DIRECTION</div><p>X <strong data-read="directionX">0.00</strong></p><p>Y <strong data-read="directionY">0.00</strong></p><div class="readout-heading">HIT</div><p data-read="hit">None</p><div class="readout-heading">HIT POSITION</div><p>X <strong data-read="hitX">--</strong></p><p>Y <strong data-read="hitY">--</strong></p></div></section>',
         '<footer><span class="dot"></span> 1: blaster · 2: ancla · LEFT CLICK dispara/sube · SPACE salto/aleja · RIGHT CLICK cancela</footer>'
       ].join('');
-      document.querySelector('#app')?.appendChild(this.element);
       this.element.querySelector('section')?.insertAdjacentHTML('beforeend', '<label><span class="field-name">Gravedad <button class="info" type="button" data-tip="Aceleración vertical en píxeles por segundo al cuadrado. En 0 no hay caída; valores altos hacen el balanceo más fuerte.">!</button><output data-out="gravity"></output></span><input data-key="gravity" type="range" min="0" max="2000" step="50" value="980"></label><label><span class="field-name">Física <button class="info" type="button" data-tip="Respuesta del movimiento horizontal. Valores bajos se sienten más inerciales; valores altos responden más rápido al teclado.">!</button><output data-out="physics"></output></span><input data-key="physics" type="range" min="0" max="100" value="100"></label>');
       const footer = this.element.querySelector('footer');
       if (footer) footer.innerHTML = '<span class="dot"></span> 1: blaster · 2: ancla · LEFT CLICK dispara/sube · SPACE salto/aleja · RIGHT CLICK cancela';
       const weaponHud = document.createElement('div');
       weaponHud.className = 'weapon-hud';
       weaponHud.innerHTML = '<div class="weapon-slot" data-slot="1"><span class="weapon-icon blaster-icon"></span><small>1</small></div><div class="weapon-slot" data-slot="2"><span class="weapon-icon anchor-icon"></span><small>2</small></div>';
-      document.querySelector('.stage')?.appendChild(weaponHud);
+      this.weaponHud = weaponHud;
       this.bind();
+    }
+
+    show(container, stage) {
+      container.appendChild(this.element);
+      stage.appendChild(this.weaponHud);
     }
 
     onChange(callback) { this.changed = callback; }
     setWeapon(weapon) {
-      document.querySelectorAll('.weapon-slot').forEach(slot => slot.classList.toggle('active', slot.dataset.slot === String(weapon)));
+      this.weaponHud.querySelectorAll('.weapon-slot').forEach(slot => slot.classList.toggle('active', slot.dataset.slot === String(weapon)));
     }
     update(state) {
       this.setRead('playerX', state.playerX.toFixed(1)); this.setRead('playerY', state.playerY.toFixed(1)); this.setRead('directionX', state.directionX.toFixed(2)); this.setRead('directionY', state.directionY.toFixed(2));
@@ -75,6 +76,3 @@
     }
     setRead(key, value) { const element = this.element.querySelector('[data-read="' + key + '"]'); if (element) element.textContent = value; }
   }
-
-  Lab.DebugPanel = DebugPanel;
-})(window.RaycastLab = window.RaycastLab || {});

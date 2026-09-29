@@ -1,7 +1,4 @@
-(function (Lab) {
-  'use strict';
-
-  class Menu {
+export class Menu {
     element = document.createElement('div');
 
     constructor() {
@@ -39,6 +36,3 @@
       });
     }
   }
-
-  Lab.Menu = Menu;
-})(window.RaycastLab = window.RaycastLab || {});

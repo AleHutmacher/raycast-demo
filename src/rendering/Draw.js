@@ -1,6 +1,3 @@
-(function (Lab) {
-  'use strict';
-
   // Helpers sobre la API nativa Canvas 2D. Reemplazan a PIXI.Graphics / PIXI.Text.
   // Los colores se siguen expresando como 0xRRGGBB para no cambiar la paleta.
   //   fill:   número (color) u objeto { color, alpha }
@@ -28,7 +25,7 @@
     ctx.stroke();
   }
 
-  const Draw = {
+export const Draw = {
     css,
 
     fillRect(ctx, x, y, width, height, color, alpha = 1) {
@@ -90,7 +87,4 @@
       ctx.fillText(value, x, y);
       ctx.restore();
     },
-  };
-
-  Lab.Draw = Draw;
-})(window.RaycastLab = window.RaycastLab || {});
+};

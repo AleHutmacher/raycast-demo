@@ -1,9 +1,6 @@
-(function (Lab) {
-  'use strict';
+import { Draw } from './Draw.js';
 
-  const { Draw } = Lab;
-
-  class RayRenderer {
+export class RayRenderer {
     draw(ctx, origin, rays, maxDistance, options, shot, anchor, connection) {
       for (const ray of rays) {
         const endDistance = ray.hit?.distance ?? maxDistance;
@@ -32,6 +29,3 @@
       }
     }
   }
-
-  Lab.RayRenderer = RayRenderer;
-})(window.RaycastLab = window.RaycastLab || {});

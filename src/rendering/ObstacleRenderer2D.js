@@ -1,11 +1,8 @@
-(function (Lab) {
-  'use strict';
-
-  const { Draw } = Lab;
+import { Draw } from './Draw.js';
 
   const LABEL_STYLE = { fill: 0x9bb9d7, fontFamily: 'Arial', fontSize: 12, fontWeight: 'bold' };
 
-  class ObstacleRenderer {
+export class ObstacleRenderer {
     draw(ctx, obstacles, showBounds) {
       for (const obstacle of obstacles) {
         const { x, y } = obstacle.position;
@@ -18,6 +15,3 @@
       }
     }
   }
-
-  Lab.ObstacleRenderer = ObstacleRenderer;
-})(window.RaycastLab = window.RaycastLab || {});

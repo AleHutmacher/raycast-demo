@@ -1,9 +1,6 @@
-(function (Lab) {
-  'use strict';
+import { Draw } from './Draw.js';
 
-  const { Draw } = Lab;
-
-  class PlayerRenderer {
+export class PlayerRenderer {
     draw(ctx, player, weapon) {
       const { x, y } = player.position;
       const dir = player.direction;
@@ -13,6 +10,3 @@
       Draw.circle(ctx, x, y, 4, 0x122033);
     }
   }
-
-  Lab.PlayerRenderer = PlayerRenderer;
-})(window.RaycastLab = window.RaycastLab || {});

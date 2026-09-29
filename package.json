@@ -4,14 +4,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --open /dev.html",
+    "build": "node scripts/build-standalone.js",
     "test": "vitest run"
   },
-  "dependencies": {
-    "pixi.js": "^8.5.2"
-  },
   "devDependencies": {
+    "esbuild": "^0.25.12",
     "vite": "^6.0.5",
     "vitest": "^2.1.8"
   }

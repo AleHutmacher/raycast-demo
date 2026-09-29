@@ -1,10 +1,8 @@
-(function (Lab) {
-  'use strict';
+import { Draw } from './Draw.js';
+import { castRayDDA } from '../raycast/DDA.js';
 
-  const { Draw, castRayDDA } = Lab;
-
-  class MinimapRenderer3D {
-    draw(ctx, player, map, cellSize, ox, oy, width, height, controls) {
+export class MinimapRenderer3D {
+    draw(ctx, player, map, cellSize, ox, oy, width, height, controls, lights = []) {
       const showGrid = controls?.showGrid !== false;
       const showRays = controls?.showRays !== false;
       const mapW = map[0].length;
@@ -59,6 +57,12 @@
         }
       }
 
+      for (const light of lights) {
+        const lightX = ox + (light.x / cellSize) * cellW;
+        const lightY = oy + (light.y / cellSize) * cellH;
+        Draw.circle(ctx, lightX, lightY, 5, 0xffdf5d, { color: 0xffffff, width: 1 });
+      }
+
       const fov = (controls?.fov ?? 60) * Math.PI / 180;
       const coneLen = 60;
       Draw.line(ctx, px, py, px + Math.cos(player.angle - fov / 2) * coneLen, py + Math.sin(player.angle - fov / 2) * coneLen, { color: 0x4de1bd, width: 1, alpha: 0.5 });
@@ -68,6 +72,3 @@
       Draw.circle(ctx, px, py, 4, 0x4de1bd, { color: 0xffffff, width: 1 });
     }
   }
-
-  Lab.MinimapRenderer3D = MinimapRenderer3D;
-})(window.RaycastLab = window.RaycastLab || {});

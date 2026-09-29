@@ -1,7 +1,4 @@
-(function (Lab) {
-  'use strict';
-
-  function castRayDDA(playerPos, rayDirX, rayDirY, map, cellSize) {
+export function castRayDDA(playerPos, rayDirX, rayDirY, map, cellSize) {
     const mapW = map[0].length;
     const mapH = map.length;
 
@@ -75,7 +72,4 @@
     }
 
     return { distance: euclideanDist, perpDist: perpWallDist * cellSize, side, normal, mapX, mapY, hitX, hitY };
-  }
-
-  Lab.castRayDDA = castRayDDA;
-})(window.RaycastLab = window.RaycastLab || {});
+}

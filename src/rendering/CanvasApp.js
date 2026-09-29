@@ -1,11 +1,8 @@
-(function (Lab) {
-  'use strict';
-
-  const { Draw } = Lab;
+import { Draw } from './Draw.js';
 
   // Reemplazo mínimo de PIXI.Application: un <canvas> con contexto 2D,
   // un bucle con requestAnimationFrame y resize nítido en pantallas retina.
-  class CanvasApp {
+export class CanvasApp {
     constructor({ background = 0x000000 } = {}) {
       this.background = background;
       this.canvas = document.createElement('canvas');
@@ -15,7 +12,22 @@
       this.pixelRatio = 1;
       this.tickers = [];
       this.lastTime = null;
+      this.frameId = null;
+      this.running = false;
+      this.resizeObserver = null;
       this.resize(this.width, this.height);
+    }
+
+    mount(container) {
+      container.appendChild(this.canvas);
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = new ResizeObserver(() => {
+        const rect = container.getBoundingClientRect();
+        this.resize(rect.width, rect.height);
+      });
+      this.resizeObserver.observe(container);
+      const rect = container.getBoundingClientRect();
+      this.resize(rect.width, rect.height);
     }
 
     // width/height en píxeles CSS; el buffer interno se escala por devicePixelRatio.
@@ -38,10 +50,35 @@
     // Registra una función que se llama en cada frame con (deltaSeconds, ctx).
     addTicker(callback) {
       this.tickers.push(callback);
-      if (this.tickers.length === 1) requestAnimationFrame(time => this.frame(time));
+      if (!this.running) {
+        this.running = true;
+        this.lastTime = null;
+        this.frameId = requestAnimationFrame(time => this.frame(time));
+      }
+      return () => this.removeTicker(callback);
+    }
+
+    removeTicker(callback) {
+      this.tickers = this.tickers.filter(tick => tick !== callback);
+      if (this.tickers.length === 0) {
+        this.running = false;
+        if (this.frameId !== null) cancelAnimationFrame(this.frameId);
+        this.frameId = null;
+      }
+    }
+
+    destroy() {
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = null;
+      this.tickers = [];
+      this.running = false;
+      if (this.frameId !== null) cancelAnimationFrame(this.frameId);
+      this.frameId = null;
+      this.canvas.remove();
     }
 
     frame(time) {
+      if (!this.running || this.tickers.length === 0) return;
       // Igual que el ticker de pixi: el delta se limita a 100 ms para evitar saltos.
       const deltaSeconds = this.lastTime === null ? 0 : Math.min(0.1, Math.max(0, (time - this.lastTime) / 1000));
       this.lastTime = time;
@@ -52,9 +89,11 @@
       ctx.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
 
       for (const tick of this.tickers) tick(deltaSeconds, ctx);
-      requestAnimationFrame(next => this.frame(next));
+      if (this.running && this.tickers.length > 0) {
+        this.frameId = requestAnimationFrame(next => this.frame(next));
+      } else {
+        this.running = false;
+        this.frameId = null;
+      }
     }
   }
-
-  Lab.CanvasApp = CanvasApp;
-})(window.RaycastLab = window.RaycastLab || {});

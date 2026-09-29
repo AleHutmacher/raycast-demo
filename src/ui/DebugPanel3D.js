@@ -1,7 +1,4 @@
-(function (Lab) {
-  'use strict';
-
-  class DebugPanel3D {
+export class DebugPanel3D {
     element = document.createElement('aside');
     controls = { speed: 200, rotationSpeed: 3, fov: 60, showMinimap: true, showGrid: true, showRays: true, shadeWalls: true };
     values = new Map();
@@ -85,6 +82,3 @@
       if (element) element.textContent = value;
     }
   }
-
-  Lab.DebugPanel3D = DebugPanel3D;
-})(window.RaycastLab = window.RaycastLab || {});

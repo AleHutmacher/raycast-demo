@@ -1,7 +1,4 @@
-(function (Lab) {
-  'use strict';
-
-  function intersectRectangle(origin, direction, maxDistance, obstacle) {
+function intersectRectangle(origin, direction, maxDistance, obstacle) {
     const minX = obstacle.position.x;
     const minY = obstacle.position.y;
     const maxX = minX + obstacle.width;
@@ -31,9 +28,9 @@
     const distance = near >= 0 ? near : far;
     if (distance < 0 || distance > maxDistance) return null;
     return { distance, normal: near >= 0 ? nearNormal : { x: -direction.x, y: direction.y === 0 ? 0 : -direction.y } };
-  }
+}
 
-  function raycast(origin, direction, maxDistance, obstacles) {
+export function raycast(origin, direction, maxDistance, obstacles) {
     let closest = null;
     for (const obstacle of obstacles) {
       const entry = intersectRectangle(origin, direction, maxDistance, obstacle);
@@ -42,7 +39,4 @@
       }
     }
     return closest;
-  }
-
-  Lab.raycast = raycast;
-})(window.RaycastLab = window.RaycastLab || {});
+}
