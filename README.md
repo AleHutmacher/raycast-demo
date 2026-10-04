@@ -2,6 +2,14 @@
 
 Raycast Lab contiene una demo de raycasting 2D y un renderer 2.5D sobre Canvas 2D.
 
+## Cómo ejecutarlo (sin instalar nada)
+
+1. Abrí la carpeta `raycast-demo` en VS Code (con la extensión Live Server).
+2. Clic derecho en `dev.html` → **Open with Live Server**.
+3. Después de editar `src/`, recargá el navegador.
+
+> No uses `index.html` con Go Live: carga `dist/raycast-lab.js`, que no está en el repo y solo existe después de `npm run build`. Sin ese archivo se ve una pantalla oscura.
+
 ## Estructura
 
 - `src/game/`: estado del mundo y reglas de juego, incluidos movimiento y colisiones.
