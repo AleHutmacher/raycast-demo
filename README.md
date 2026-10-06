@@ -27,4 +27,6 @@ Flujo principal: `input → Game2D/Game3D → estado de escena → renderer → 
 - `npm install`: instala herramientas de desarrollo/build.
 - `npm run dev`: abre la entrada de desarrollo Vite (`dev.html`).
 - `npm test`: pruebas unitarias de geometría, DDA, iluminación y conversión del minimapa.
-- `npm run build`: genera `dist/index.html` y un bundle clásico. Se puede abrir `dist/index.html` con doble clic, sin servidor. También se puede abrir el `index.html` raíz después de compilar.
+- `npm run build`: genera `dist/index.html` y un bundle clásico. Se puede abrir `dist/index.html` con doble clic, sin servidor.
+
+GitHub Pages puede publicar `main` desde la raíz del repositorio: el `index.html` usa rutas relativas y módulos ES con imports relativos, por lo que funciona bajo el subdirectorio `/raycast-demo/`.
